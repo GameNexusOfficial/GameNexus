@@ -3,61 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameNexus | GitHub Live</title>
+    <title>GameNexus | LIVE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0b0e14; color: #ffffff; font-family: sans-serif; }
-        .live-card { border: 1px solid #1e293b; transition: 0.3s; cursor: pointer; background: #161b22; }
-        .live-card:hover { border-color: #3b82f6; background: #1c2128; }
-        .active-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); border: 1px solid #3b82f6; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-        .animate-blink { animation: blink 2s infinite; }
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .nexus-gradient { background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); }
+        .video-glow { box-shadow: 0 0 40px rgba(59, 130, 246, 0.15); border: 1px solid #1e293b; }
+        .live-dot { height: 8px; width: 8px; background-color: #ef4444; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        iframe { border-radius: 12px; }
+        .lobby-card { transition: 0.2s; border: 1px solid transparent; }
+        .lobby-card:hover { background: #111; border-color: #3b82f6; cursor: pointer; }
     </style>
 </head>
-<body>
+<body class="p-0 m-0">
 
-    <nav class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#0d1117]">
-        <h1 class="text-xl font-bold text-blue-500 uppercase tracking-tighter">Game<span class="text-white">Nexus</span></h1>
-        <div id="status" class="text-[10px] font-mono text-gray-500 uppercase">
-            <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-1"></span> Connecting to API...
+    <!-- Top Bar -->
+    <nav class="w-full py-4 px-6 border-b border-gray-900 bg-black/50 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="text-2xl font-black tracking-tighter nexus-gradient bg-clip-text text-transparent italic">GAMENEXUS</h1>
+        <div id="signal" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+            <span class="live-dot"></span> System Scanning
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto p-4 md:p-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <main class="max-w-[1400px] mx-auto p-4 lg:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
-            <!-- LEFT: MAIN PLAYER -->
-            <div class="lg:col-span-2">
-                <div class="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800" id="mainContainer">
-                    <div id="noLive" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                        <i class="fa-solid fa-ghost text-4xl text-gray-800 mb-4"></i>
-                        <h3 class="text-gray-500 font-bold uppercase tracking-widest text-sm">No Live Streams Found</h3>
-                        <p class="text-gray-600 text-xs mt-2">The system is scanning your 5 tracked channels...</p>
+            <!-- MAIN THEATER (3 Cols) -->
+            <div class="lg:col-span-3 space-y-6">
+                <div id="playerContainer" class="video-glow relative aspect-video bg-[#0a0a0a] rounded-xl flex items-center justify-center overflow-hidden">
+                    <!-- Placeholder when offline -->
+                    <div id="offlineUI" class="text-center">
+                        <i class="fa-solid fa-circle-nodes text-5xl text-gray-800 mb-4"></i>
+                        <p class="text-gray-600 font-bold uppercase text-xs tracking-widest">Searching for Live Signal...</p>
                     </div>
-                    <iframe id="nexusPlayer" class="hidden w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <!-- The Actual Video -->
+                    <iframe id="mainPlayer" class="hidden absolute inset-0 w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                <div class="mt-4">
-                    <h2 id="nowPlaying" class="text-lg font-bold text-gray-400 uppercase tracking-tight">Standby</h2>
-                    <p id="nowGame" class="text-blue-500 text-[10px] font-black uppercase">Live Esports Monitor</p>
+
+                <div class="flex justify-between items-center bg-[#0a0a0a] p-6 rounded-xl border border-gray-900">
+                    <div>
+                        <h2 id="mainTitle" class="text-xl font-bold text-gray-300">Nexus Live Monitor</h2>
+                        <p id="mainGame" class="text-blue-500 text-xs font-black uppercase mt-1 tracking-widest italic">Global Esports</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="window.location.reload()" class="bg-gray-900 hover:bg-gray-800 p-3 rounded-lg text-gray-400 border border-gray-800 transition">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- RIGHT: LOBBY -->
-            <div class="space-y-4">
-                <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-2">Live Discovery</h3>
-                <div id="lobby" class="space-y-3">
-                    <!-- Cards will appear here -->
+            <!-- SIDE LOBBY (1 Col) -->
+            <div class="lg:col-span-1">
+                <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] mb-4">Active Feeds</h3>
+                <div id="lobbyList" class="space-y-3">
+                    <!-- Active channels show here -->
+                </div>
+                <div id="emptyLobby" class="py-10 text-center border border-dashed border-gray-800 rounded-xl">
+                    <p class="text-[10px] text-gray-700 uppercase font-bold">Scanning Channels...</p>
                 </div>
             </div>
 
         </div>
-    </div>
+    </main>
 
     <script>
         const API_KEY = 'AIzaSyB4uQ7xLebDtVuXijx4JMse7W-KBEgLbf4';
         
-        // These are the exact IDs for the channels you provided
+        // Verified Channel IDs for your links
         const CHANNELS = [
             { id: 'UC08L_Yis-Wn8UveR9A8r6_A', name: 'Free Fire Global', game: 'Free Fire' },
             { id: 'UCy1Ms_5qBcPJ_v9lV79VW_A', name: 'LoL Esports', game: 'League of Legends' },
@@ -66,72 +81,72 @@
             { id: 'UCW0ZAn5E_V6pB1E6z8v0a_A', name: 'Free Fire Pakistan', game: 'Free Fire' }
         ];
 
-        async function startNexus() {
-            const status = document.getElementById('status');
-            const lobby = document.getElementById('lobby');
-            let hasLive = false;
+        async function fetchLives() {
+            let foundAny = false;
+            const lobby = document.getElementById('lobbyList');
+            const signal = document.getElementById('signal');
 
             for (const ch of CHANNELS) {
                 try {
-                    // API Call to search for eventType=live
                     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${ch.id}&type=video&eventType=live&key=${API_KEY}`;
-                    const res = await fetch(url);
-                    const data = await res.json();
+                    const response = await fetch(url);
+                    const data = await response.json();
 
                     if (data.items && data.items.length > 0) {
                         const video = data.items[0];
-                        const videoId = video.id.videoId;
-                        const title = video.snippet.title;
+                        const vId = video.id.videoId;
+                        const vTitle = video.snippet.title;
 
-                        if (!hasLive) {
-                            playVideo(videoId, title, ch.game);
-                            hasLive = true;
+                        // Add to Lobby
+                        createLobbyItem(vId, vTitle, ch.game);
+                        
+                        // If it's the first one, put it in the Theater
+                        if (!foundAny) {
+                            updateTheater(vId, vTitle, ch.game);
+                            foundAny = true;
                         }
-                        createCard(videoId, title, ch.game);
                     }
-                } catch (e) {
-                    console.error("Error with channel: " + ch.name);
-                }
+                } catch (e) { console.log("Error loading " + ch.name); }
             }
 
-            if (hasLive) {
-                status.innerHTML = '<span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span> NETWORK ACTIVE';
+            if (foundAny) {
+                document.getElementById('emptyLobby').classList.add('hidden');
+                signal.innerHTML = `<span class="live-dot" style="background-color:#22c55e"></span> Signal Locked`;
             } else {
-                status.innerHTML = '<span class="inline-block w-2 h-2 bg-red-800 rounded-full mr-1"></span> CHANNELS OFFLINE';
+                document.getElementById('emptyLobby').innerHTML = `<p class="text-[10px] text-gray-700 uppercase font-bold">No Lives Online</p>`;
+                signal.innerHTML = `<span class="live-dot" style="background-color:#333"></span> Standby`;
             }
         }
 
-        function playVideo(id, title, game) {
-            const player = document.getElementById('nexusPlayer');
-            const noLive = document.getElementById('noLive');
-            const mainContainer = document.getElementById('mainContainer');
+        function updateTheater(id, title, game) {
+            const player = document.getElementById('mainPlayer');
+            const offlineUI = document.getElementById('offlineUI');
             
-            noLive.classList.add('hidden');
+            offlineUI.classList.add('hidden');
             player.classList.remove('hidden');
-            mainContainer.classList.add('active-glow');
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&rel=0`;
             
-            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-            document.getElementById('nowPlaying').innerText = title;
-            document.getElementById('nowGame').innerText = game;
+            document.getElementById('mainTitle').innerText = title;
+            document.getElementById('mainGame').innerText = game;
         }
 
-        function createCard(id, title, game) {
-            const lobby = document.getElementById('lobby');
-            const card = document.createElement('div');
-            card.className = "live-card p-3 rounded-md flex items-center gap-3";
-            card.onclick = () => playVideo(id, title, game);
+        function createLobbyItem(id, title, game) {
+            const lobby = document.getElementById('lobbyList');
+            const div = document.createElement('div');
+            div.className = "lobby-card bg-[#0a0a0a] p-3 rounded-xl flex gap-4 items-center";
+            div.onclick = () => updateTheater(id, title, game);
             
-            card.innerHTML = `
-                <div class="w-16 h-10 bg-gray-900 rounded bg-cover bg-center" style="background-image:url('https://img.youtube.com/vi/${id}/mqdefault.jpg')"></div>
-                <div class="overflow-hidden">
-                    <p class="text-[9px] font-bold text-blue-500 uppercase">${game}</p>
-                    <p class="text-[10px] text-gray-300 truncate font-medium">${title}</p>
+            div.innerHTML = `
+                <div class="w-20 h-12 bg-gray-900 rounded-md bg-cover bg-center shadow-lg" style="background-image:url('https://img.youtube.com/vi/${id}/mqdefault.jpg')"></div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1">${game}</p>
+                    <h4 class="text-[11px] font-bold text-gray-300 truncate">${title}</h4>
                 </div>
             `;
-            lobby.appendChild(card);
+            lobby.appendChild(div);
         }
 
-        window.onload = startNexus;
+        window.onload = fetchLives;
     </script>
 </body>
 </html>
