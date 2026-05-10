@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameNexus | Esports Analytics & Live</title>
+    <title>GameNexus | Esports Analytics & Live Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,7 +12,6 @@
         :root {
             --esc-green: #48F955;
             --esc-black: #050509;
-            --esc-dark-blue: #0f111a;
             --esc-border: #1f2937;
         }
 
@@ -20,6 +19,7 @@
             background-color: var(--esc-black); 
             color: #FFFFFF; 
             font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
         }
 
         .esc-card { 
@@ -32,12 +32,6 @@
             background-color: var(--esc-green);
             color: #000;
             font-weight: 700;
-            transition: 0.2s;
-        }
-
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 0 15px rgba(72, 249, 85, 0.4);
         }
 
         .active-stream { 
@@ -45,13 +39,15 @@
             background: rgba(72, 249, 85, 0.05);
         }
 
-        .live-indicator {
-            background-color: #ff4655;
-            animation: blink 1.5s infinite;
+        /* Live Chat Styling */
+        .chat-container {
+            height: 500px;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--esc-border);
         }
 
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        
         .data-label { color: #8b949e; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
     </style>
 </head>
@@ -64,15 +60,8 @@
                 <h1 class="text-xl font-extrabold tracking-tight italic">
                     <span class="text-[var(--esc-green)]">GAME</span>NEXUS
                 </h1>
-                <div class="hidden md:flex space-x-6 text-sm font-semibold text-gray-400">
-                    <a href="#" class="hover:text-white transition">TOURNAMENTS</a>
-                    <a href="#" class="hover:text-white transition text-[var(--esc-green)]">LIVE NOW</a>
-                    <a href="#" class="hover:text-white transition">TEAMS</a>
-                    <a href="#" class="hover:text-white transition">GAMES</a>
-                </div>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="text-xs font-bold border border-gray-700 px-4 py-2 rounded hover:bg-gray-800 transition">SIGN IN</button>
                 <button class="btn-primary text-xs px-4 py-2 rounded">GET PRO</button>
             </div>
         </div>
@@ -80,20 +69,22 @@
 
     <main class="max-w-7xl mx-auto p-4 lg:p-8">
         
-        <div class="mb-6">
-            <div class="flex items-center space-x-2 text-[var(--esc-green)] text-xs font-bold mb-2">
-                <span class="w-2 h-2 rounded-full live-indicator"></span>
-                <span>SYSTEM ONLINE: DATA SYNC ACTIVE</span>
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <div class="flex items-center space-x-2 text-[var(--esc-green)] text-xs font-bold mb-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span>LIVE DATA FEED</span>
+                </div>
+                <h2 class="text-3xl font-extrabold uppercase">Esports Global Live</h2>
             </div>
-            <h2 class="text-3xl font-extrabold uppercase">Live Broadcast Hub</h2>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
-            <!-- Left: Main Theatre -->
+            <!-- Left: Video & Stats (3/4 width) -->
             <div class="lg:col-span-3 space-y-4">
                 <div class="esc-card overflow-hidden">
-                    <div class="aspect-video bg-black relative">
+                    <div class="aspect-video bg-black">
                         <iframe 
                             id="mainNexusPlayer"
                             width="100%" height="100%" 
@@ -101,63 +92,49 @@
                             frameborder="0" allowfullscreen>
                         </iframe>
                     </div>
-                    <div class="p-6 flex justify-between items-center">
-                        <div>
-                            <h3 id="streamTitle" class="text-xl font-bold mb-1 uppercase">Esports Global Live</h3>
-                            <div class="flex space-x-4 items-center">
-                                <span class="text-xs text-gray-400"><i class="fa-solid fa-eye mr-2"></i> 4,493 Viewers</span>
-                                <span class="text-xs text-gray-400"><i class="fa-solid fa-clock mr-2"></i> Live Now</span>
-                            </div>
-                        </div>
-                        <button onclick="handleLike()" class="esc-card px-6 py-2 flex items-center space-x-2 hover:bg-gray-800">
-                            <i id="heartIcon" class="fa-solid fa-heart text-gray-500"></i>
-                            <span id="likeCount" class="font-bold">356</span>
-                        </button>
-                    </div>
                 </div>
 
+                <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="esc-card p-4">
-                        <p class="data-label">Tournament Status</p>
-                        <p class="text-lg font-bold text-[var(--esc-green)]">SOUTH ASIA PLAY-INS</p>
+                        <p class="data-label">Tournament</p>
+                        <p class="text-lg font-bold text-[var(--esc-green)]">FFMAI 2026</p>
                     </div>
                     <div class="esc-card p-4">
-                        <p class="data-label">Current Group</p>
-                        <p class="text-lg font-bold">GROUP A - C</p>
+                        <p class="data-label">Real-time Status</p>
+                        <p class="text-lg font-bold uppercase">Broadcasting</p>
                     </div>
                     <div class="esc-card p-4">
-                        <p class="data-label">Platform</p>
-                        <p class="text-lg font-bold">YOUTUBE LIVE</p>
+                        <button onclick="handleLike()" class="w-full h-full flex flex-col justify-start items-start">
+                            <p class="data-label">Engagement</p>
+                            <p class="text-lg font-bold"><i id="heartIcon" class="fa-solid fa-heart mr-2 text-gray-600"></i> <span id="likeCount">356</span></p>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Sidebar -->
+            <!-- Right: Live Chat & Sidebar (1/4 width) -->
             <div class="space-y-4">
-                <div class="esc-card">
-                    <div class="p-3 border-b border-gray-800 flex justify-between items-center">
-                        <span class="text-xs font-bold text-gray-400 uppercase">Select Broadcast</span>
-                        <span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-[var(--esc-green)]">1 LIVE</span>
-                    </div>
-                    <div class="divide-y divide-gray-800" id="streamLobby">
-                        
-                        <!-- Global Live Only -->
-                        <div onclick="switchStream('d8MFfmKP1oY', 'Esports Global Live', this)" 
-                             class="p-4 cursor-pointer hover:bg-white/5 transition active-stream flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-gray-900 rounded border border-gray-800 flex-shrink-0 bg-cover" style="background-image: url('https://img.youtube.com/vi/d8MFfmKP1oY/mqdefault.jpg')"></div>
-                            <div class="overflow-hidden">
-                                <p class="text-xs font-bold truncate">GLOBAL COVERAGE</p>
-                                <p class="text-[10px] text-[var(--esc-green)]">FFMAI 2026 SPRING</p>
-                            </div>
-                        </div>
-
+                <div class="flex flex-col">
+                    <p class="data-label mb-2">Live Chat</p>
+                    <div class="chat-container">
+                        <!-- Replace YOUR_DOMAIN with your actual domain name -->
+                        <iframe 
+                            id="liveChatEmbed"
+                            width="100%" 
+                            height="100%" 
+                            src="https://www.youtube.com/live_chat?v=d8MFfmKP1oY&embed_domain=YOUR_DOMAIN" 
+                            frameborder="0">
+                        </iframe>
                     </div>
                 </div>
 
-                <div class="esc-card p-6 bg-gradient-to-br from-[#1a2e1c] to-black border-[var(--esc-green)]/30">
-                    <p class="text-[10px] font-bold text-[var(--esc-green)] mb-1 uppercase">Pro Access</p>
-                    <p class="text-sm font-bold leading-tight mb-4">Unlock advanced viewership analytics for this event.</p>
-                    <button class="w-full btn-primary py-2 rounded text-xs uppercase">Learn More</button>
+                <div class="esc-card p-4">
+                    <p class="data-label mb-2">Current Stream</p>
+                    <div class="flex items-center space-x-3 active-stream p-2 border-l-4">
+                        <div class="w-10 h-10 bg-gray-800 rounded bg-cover" style="background-image: url('https://img.youtube.com/vi/d8MFfmKP1oY/mqdefault.jpg')"></div>
+                        <p class="text-[10px] font-bold">FFMAI GLOBAL LIVE</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,26 +146,15 @@
             const countElement = document.getElementById('likeCount');
             const heartIcon = document.getElementById('heartIcon');
             let currentCount = parseInt(countElement.innerText);
-
             if (!isLiked) {
                 countElement.innerText = currentCount + 1;
-                heartIcon.style.color = "#ff4655";
+                heartIcon.style.color = "#48F955";
                 isLiked = true;
             } else {
                 countElement.innerText = currentCount - 1;
                 heartIcon.style.color = "#6b7280";
                 isLiked = false;
             }
-        }
-
-        function switchStream(videoId, title, element) {
-            const player = document.getElementById('mainNexusPlayer');
-            player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-            document.getElementById('streamTitle').innerText = title.toUpperCase();
-            
-            const allItems = document.querySelectorAll('#streamLobby > div');
-            allItems.forEach(item => item.classList.remove('active-stream'));
-            element.classList.add('active-stream');
         }
     </script>
 </body>
