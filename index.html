@@ -3,200 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameNexus | Auto-Live Esports Hub</title>
+    <title>GameNexus | GitHub Live</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0f111a; color: #ffffff; font-family: 'Inter', sans-serif; }
-        .gradient-border { border: 1px solid #1f2937; transition: 0.3s; cursor: pointer; }
-        .gradient-border:hover { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        .live-glow { border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
-        .like-active { color: #ef4444 !important; transform: scale(1.2); transition: 0.2s; }
-        .live-tag { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        body { background-color: #0b0e14; color: #ffffff; font-family: sans-serif; }
+        .live-card { border: 1px solid #1e293b; transition: 0.3s; cursor: pointer; background: #161b22; }
+        .live-card:hover { border-color: #3b82f6; background: #1c2128; }
+        .active-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); border: 1px solid #3b82f6; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .animate-blink { animation: blink 2s infinite; }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- Navigation -->
-    <nav class="border-b border-gray-800 p-4 flex justify-between items-center bg-[#161926] sticky top-0 z-50">
-        <div class="flex items-center space-x-8">
-            <h1 class="text-2xl font-black tracking-tighter text-blue-500 uppercase">Game<span class="text-white">Nexus</span></h1>
-        </div>
-        <div id="apiStatus" class="text-[10px] font-bold text-gray-500 flex items-center gap-2">
-            <span class="w-2 h-2 bg-yellow-500 rounded-full"></span> INITIALIZING...
+    <nav class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#0d1117]">
+        <h1 class="text-xl font-bold text-blue-500 uppercase tracking-tighter">Game<span class="text-white">Nexus</span></h1>
+        <div id="status" class="text-[10px] font-mono text-gray-500 uppercase">
+            <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-1"></span> Connecting to API...
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto p-4 md:p-8">
-        
-        <!-- Hero: Live Stream Section -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- LEFT: MAIN PLAYER -->
             <div class="lg:col-span-2">
-                <div id="playerWrapper" class="relative aspect-video bg-black rounded-xl overflow-hidden border border-gray-800 shadow-2xl">
-                    <!-- Loading Placeholder -->
-                    <div id="standbyScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-[#161926] z-10">
-                        <i class="fa-solid fa-tower-broadcast text-4xl text-gray-700 mb-4 animate-pulse"></i>
-                        <p class="text-gray-500 font-bold uppercase tracking-widest text-sm">Searching for Live Signals...</p>
+                <div class="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800" id="mainContainer">
+                    <div id="noLive" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                        <i class="fa-solid fa-ghost text-4xl text-gray-800 mb-4"></i>
+                        <h3 class="text-gray-500 font-bold uppercase tracking-widest text-sm">No Live Streams Found</h3>
+                        <p class="text-gray-600 text-xs mt-2">The system is scanning your 5 tracked channels...</p>
                     </div>
-                    
-                    <iframe 
-                        id="mainNexusPlayer"
-                        width="100%" 
-                        height="100%" 
-                        src="" 
-                        frameborder="0" 
-                        allow="autoplay; encrypted-media" 
-                        allowfullscreen 
-                        class="hidden">
-                    </iframe>
-
-                    <div id="liveBadge" class="absolute top-4 left-4 hidden z-20">
-                        <span class="bg-red-600 text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 live-tag">
-                            <span class="w-1.5 h-1.5 bg-white rounded-full"></span> LIVE STAGE
-                        </span>
-                    </div>
+                    <iframe id="nexusPlayer" class="hidden w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                
-                <div class="mt-4 flex justify-between items-start">
-                    <div>
-                        <h2 id="streamTitle" class="text-xl font-bold uppercase tracking-tight text-gray-600">No Active Stream</h2>
-                        <p id="streamDesc" class="text-gray-500 text-sm italic">Connect your API to start tracking matches.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="handleLike()" id="likeBtn" class="bg-gray-800 hover:bg-gray-700 px-5 py-2.5 rounded flex items-center space-x-2 transition">
-                            <i id="heartIcon" class="fa-solid fa-heart text-gray-400"></i>
-                            <span id="likeCount" class="font-bold text-sm">0</span>
-                        </button>
-                    </div>
+                <div class="mt-4">
+                    <h2 id="nowPlaying" class="text-lg font-bold text-gray-400 uppercase tracking-tight">Standby</h2>
+                    <p id="nowGame" class="text-blue-500 text-[10px] font-black uppercase">Live Esports Monitor</p>
                 </div>
             </div>
 
-            <!-- Auto-Detected Lobby -->
-            <div class="bg-[#161926] rounded-xl border border-gray-800 p-6">
-                <h3 class="font-bold text-gray-400 uppercase text-xs tracking-widest mb-4">Live Discovery</h3>
-                <div id="liveLobby" class="space-y-4">
-                    <!-- Streams found by API will appear here -->
-                </div>
-                
-                <div id="noLiveMsg" class="text-center py-10 text-gray-600 text-xs italic">
-                    All tracked channels are currently offline.
+            <!-- RIGHT: LOBBY -->
+            <div class="space-y-4">
+                <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-2">Live Discovery</h3>
+                <div id="lobby" class="space-y-3">
+                    <!-- Cards will appear here -->
                 </div>
             </div>
-        </section>
 
-        <!-- News Section -->
-        <div class="mb-12">
-            <h3 class="text-lg font-bold mb-6 uppercase tracking-widest border-l-4 border-blue-500 pl-3">Latest News</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-[#161926] border border-gray-800 rounded-xl overflow-hidden p-5">
-                    <span class="text-blue-500 text-[10px] font-bold uppercase">Official</span>
-                    <h4 class="font-bold my-2">GameNexus v2.0 Update</h4>
-                    <p class="text-gray-400 text-xs mb-4">System now auto-tracks Free Fire and Valorant pro channels.</p>
-                    <a href="https://www.google.com" target="_blank" class="text-xs font-black text-white hover:text-blue-400">MORE</a>
-                </div>
-            </div>
         </div>
-    </main>
+    </div>
 
     <script>
-        // 1. CONFIGURATION
         const API_KEY = 'AIzaSyB4uQ7xLebDtVuXijx4JMse7W-KBEgLbf4';
+        
+        // These are the exact IDs for the channels you provided
         const CHANNELS = [
-            { id: 'UC08L_Yis-Wn8UveR9A8r6_A', name: 'Free Fire Esports', game: 'Free Fire' },
+            { id: 'UC08L_Yis-Wn8UveR9A8r6_A', name: 'Free Fire Global', game: 'Free Fire' },
             { id: 'UCy1Ms_5qBcPJ_v9lV79VW_A', name: 'LoL Esports', game: 'League of Legends' },
             { id: 'UCzS_G8E0_O_f8S953XGvG2Q', name: 'COD League', game: 'Call of Duty' },
             { id: 'UC8CX0LD98EDXl4UYX1AfDCg', name: 'Valorant Esports', game: 'Valorant' },
-            { id: 'UCW0ZAn5E_V6pB1E6z8v0a_A', name: 'FF Esports Pakistan', game: 'Free Fire' }
+            { id: 'UCW0ZAn5E_V6pB1E6z8v0a_A', name: 'Free Fire Pakistan', game: 'Free Fire' }
         ];
 
-        let foundLive = false;
+        async function startNexus() {
+            const status = document.getElementById('status');
+            const lobby = document.getElementById('lobby');
+            let hasLive = false;
 
-        // 2. AUTO-SCANNER LOGIC
-        async function scanChannels() {
-            const status = document.getElementById('apiStatus');
-            const lobby = document.getElementById('liveLobby');
-            const noLive = document.getElementById('noLiveMsg');
-
-            for (let ch of CHANNELS) {
+            for (const ch of CHANNELS) {
                 try {
-                    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${ch.id}&type=video&eventType=live&key=${API_KEY}`);
-                    const data = await response.json();
+                    // API Call to search for eventType=live
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${ch.id}&type=video&eventType=live&key=${API_KEY}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
 
                     if (data.items && data.items.length > 0) {
                         const video = data.items[0];
-                        displayLive(video.id.videoId, video.snippet.title, ch.game);
-                        noLive.style.display = 'none';
-                        foundLive = true;
+                        const videoId = video.id.videoId;
+                        const title = video.snippet.title;
+
+                        if (!hasLive) {
+                            playVideo(videoId, title, ch.game);
+                            hasLive = true;
+                        }
+                        createCard(videoId, title, ch.game);
                     }
-                } catch (err) {
-                    console.error("API Error for " + ch.name);
+                } catch (e) {
+                    console.error("Error with channel: " + ch.name);
                 }
             }
 
-            if (foundLive) {
-                status.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full"></span> SYSTEM LIVE';
+            if (hasLive) {
+                status.innerHTML = '<span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span> NETWORK ACTIVE';
             } else {
-                status.innerHTML = '<span class="w-2 h-2 bg-gray-600 rounded-full"></span> NO LIVES FOUND';
+                status.innerHTML = '<span class="inline-block w-2 h-2 bg-red-800 rounded-full mr-1"></span> CHANNELS OFFLINE';
             }
         }
 
-        function displayLive(vId, title, game) {
-            // Update Main Stage if it's the first one found
-            const mainPlayer = document.getElementById('mainNexusPlayer');
-            const standby = document.getElementById('standbyScreen');
-            const badge = document.getElementById('liveBadge');
-            const playerWrapper = document.getElementById('playerWrapper');
+        function playVideo(id, title, game) {
+            const player = document.getElementById('nexusPlayer');
+            const noLive = document.getElementById('noLive');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            noLive.classList.add('hidden');
+            player.classList.remove('hidden');
+            mainContainer.classList.add('active-glow');
+            
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+            document.getElementById('nowPlaying').innerText = title;
+            document.getElementById('nowGame').innerText = game;
+        }
 
-            if (mainPlayer.src === "" || mainPlayer.src.includes("about:blank")) {
-                mainPlayer.src = `https://www.youtube.com/embed/${vId}?autoplay=1&mute=1`;
-                mainPlayer.classList.remove('hidden');
-                standby.classList.add('hidden');
-                badge.classList.remove('hidden');
-                playerWrapper.classList.add('live-glow');
-                document.getElementById('streamTitle').innerText = title;
-                document.getElementById('streamTitle').classList.remove('text-gray-600');
-                document.getElementById('streamDesc').innerText = `Live from ${game} Pro Circuit`;
-            }
-
-            // Add to Sidebar Lobby
-            const lobby = document.getElementById('liveLobby');
-            const item = document.createElement('div');
-            item.className = "gradient-border p-3 rounded-lg flex items-center gap-3 bg-black/20";
-            item.onclick = () => {
-                mainPlayer.src = `https://www.youtube.com/embed/${vId}?autoplay=1`;
-                document.getElementById('streamTitle').innerText = title;
-            };
-            item.innerHTML = `
-                <div class="w-12 h-8 bg-gray-800 rounded bg-cover" style="background-image: url('https://img.youtube.com/vi/${vId}/default.jpg')"></div>
+        function createCard(id, title, game) {
+            const lobby = document.getElementById('lobby');
+            const card = document.createElement('div');
+            card.className = "live-card p-3 rounded-md flex items-center gap-3";
+            card.onclick = () => playVideo(id, title, game);
+            
+            card.innerHTML = `
+                <div class="w-16 h-10 bg-gray-900 rounded bg-cover bg-center" style="background-image:url('https://img.youtube.com/vi/${id}/mqdefault.jpg')"></div>
                 <div class="overflow-hidden">
-                    <p class="text-[10px] font-bold text-blue-400 uppercase">${game}</p>
-                    <p class="text-[9px] text-gray-300 truncate">${title}</p>
+                    <p class="text-[9px] font-bold text-blue-500 uppercase">${game}</p>
+                    <p class="text-[10px] text-gray-300 truncate font-medium">${title}</p>
                 </div>
             `;
-            lobby.appendChild(item);
+            lobby.appendChild(card);
         }
 
-        // 3. LIKE BUTTON LOGIC
-        let isLiked = false;
-        function handleLike() {
-            const countElement = document.getElementById('likeCount');
-            const heartIcon = document.getElementById('heartIcon');
-            let currentCount = parseInt(countElement.innerText);
-            if (!isLiked) {
-                countElement.innerText = currentCount + 1;
-                heartIcon.classList.add('like-active');
-                isLiked = true;
-            } else {
-                countElement.innerText = currentCount - 1;
-                heartIcon.classList.remove('like-active');
-                isLiked = false;
-            }
-        }
-
-        // Start scanning on page load
-        window.onload = scanChannels;
+        window.onload = startNexus;
     </script>
 </body>
 </html>
