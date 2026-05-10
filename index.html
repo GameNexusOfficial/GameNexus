@@ -6,57 +6,62 @@
     <title>GameNexus | Esport Hub</title>
     <style>
         :root {
-            --bg: #050505;
-            --panel: #111111;
-            --accent: #ff4655;
-            --text: #ffffff;
-            --text-dim: #888888;
+            --bg-dark: #00122e; /* Deep Dark Blue */
+            --panel-blue: #001f4d; /* Navy Blue */
+            --accent-white: #ffffff;
+            --text-gray: #cbd5e1;
+            --border-blue: #1e3a8a;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-dark);
+            color: var(--accent-white);
         }
 
+        /* Navigation */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 5%;
-            height: 80px;
-            background: var(--panel);
-            border-bottom: 2px solid var(--accent);
+            padding: 0 6%;
+            height: 75px;
+            background: var(--panel-blue);
+            border-bottom: 3px solid var(--accent-white);
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 900;
-            letter-spacing: 2px;
-        }
-
-        .logo span {
-            color: var(--accent);
+            letter-spacing: 1.5px;
+            color: var(--accent-white);
         }
 
         .nav-items a {
-            color: var(--text);
+            color: var(--accent-white);
             text-decoration: none;
-            margin-left: 30px;
-            font-weight: 600;
+            margin-left: 25px;
+            font-weight: bold;
             font-size: 14px;
             text-transform: uppercase;
+            transition: opacity 0.3s;
         }
 
+        .nav-items a:hover {
+            opacity: 0.7;
+        }
+
+        /* Hero Header */
         .hero {
-            height: 400px;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=2070');
+            height: 350px;
+            background: linear-gradient(rgba(0, 18, 46, 0.8), rgba(0, 18, 46, 0.8)), 
+                        url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=2070');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -64,201 +69,226 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            border-bottom: 4px solid var(--accent);
         }
 
         .hero h1 {
-            font-size: 60px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            font-size: 55px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--accent-white);
         }
 
         .hero p {
-            color: var(--accent);
-            font-weight: bold;
-            letter-spacing: 5px;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-top: 10px;
+            color: var(--text-gray);
         }
 
-        .stats-bar {
+        /* Stats Section */
+        .stats-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            background: var(--panel);
-            padding: 30px 0;
-            margin-top: -40px;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 85%;
+            margin: -50px auto 0;
+            background: var(--accent-white);
+            padding: 40px 0;
+            border-radius: 4px;
         }
 
-        .stat-item {
+        .stat-box {
             text-align: center;
-            border-right: 1px solid #222;
+            color: var(--bg-dark);
+            border-right: 1px solid #e2e8f0;
         }
 
-        .stat-item:last-child {
+        .stat-box:last-child {
             border-right: none;
         }
 
-        .stat-item h2 {
-            color: var(--accent);
-            font-size: 28px;
+        .stat-box h2 {
+            font-size: 32px;
+            font-weight: 900;
         }
 
-        .stat-item p {
-            color: var(--text-dim);
+        .stat-box p {
             font-size: 12px;
+            font-weight: bold;
             text-transform: uppercase;
+            color: #64748b;
         }
 
+        /* Matches Section */
         .section {
-            padding: 60px 10%;
+            padding: 80px 8%;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
+            align-items: flex-end;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--border-blue);
+            padding-bottom: 15px;
         }
 
         .section-header h2 {
-            font-size: 28px;
-            border-left: 5px solid var(--accent);
-            padding-left: 15px;
+            font-size: 30px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
         .match-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
         }
 
         .match-card {
-            background: var(--panel);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #222;
-            transition: 0.3s;
+            background: var(--panel-blue);
+            padding: 30px;
+            border-radius: 2px;
+            border: 1px solid var(--border-blue);
+            transition: all 0.3s ease;
         }
 
         .match-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
+            background: var(--accent-white);
+            transform: translateY(-8px);
         }
 
-        .match-time {
-            color: var(--accent);
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: block;
+        .match-card:hover * {
+            color: var(--bg-dark);
         }
 
-        .teams {
+        .time-label {
+            display: inline-block;
+            background: var(--accent-white);
+            color: var(--bg-dark);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .match-card:hover .time-label {
+            background: var(--bg-dark);
+            color: var(--accent-white);
+        }
+
+        .team-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 18px;
-            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .vs {
-            color: var(--text-dim);
+        .team-name {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .vs-text {
             font-size: 14px;
-        }
-
-        .tournament-name {
-            margin-top: 15px;
-            font-size: 13px;
-            color: var(--text-dim);
-            border-top: 1px solid #222;
-            padding-top: 15px;
-        }
-
-        .btn-live {
-            background: var(--accent);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 4px;
-            text-decoration: none;
             font-weight: bold;
+            color: var(--text-gray);
+        }
+
+        .league-tag {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-blue);
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: bold;
+        }
+
+        .btn-cta {
+            background: var(--accent-white);
+            color: var(--bg-dark);
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: 900;
             font-size: 13px;
+            text-transform: uppercase;
+            border-radius: 2px;
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">GAME<span>NEXUS</span></div>
+        <div class="logo">GAMENEXUS</div>
         <div class="nav-items">
-            <a href="#">Tournaments</a>
-            <a href="#">Matches</a>
-            <a href="#">Standings</a>
+            <a href="#">Events</a>
+            <a href="#">Rankings</a>
+            <a href="#">Pro Teams</a>
             <a href="#">News</a>
         </div>
     </nav>
 
     <header class="hero">
-        <p>THE NEXT GENERATION OF ESPORTS</p>
-        <h1>GAMENEXUS ARENA</h1>
+        <h1>PRO ARENA</h1>
+        <p>THE ULTIMATE ESPORTS DESTINATION</p>
     </header>
 
-    <div class="stats-bar">
-        <div class="stat-item">
-            <h2>452</h2>
-            <p>Active Teams</p>
+    <div class="stats-container">
+        <div class="stat-box">
+            <h2>120+</h2>
+            <p>Live Pro Leagues</p>
         </div>
-        <div class="stat-item">
-            <h2>1.2M</h2>
-            <p>Prize Pool</p>
+        <div class="stat-box">
+            <h2>$5M</h2>
+            <p>Total Rewards</p>
         </div>
-        <div class="stat-item">
-            <h2>89</h2>
-            <p>Live Events</p>
+        <div class="stat-box">
+            <h2>500</h2>
+            <p>Verified Teams</p>
         </div>
-        <div class="stat-item">
-            <h2>15k</h2>
-            <p>Pro Players</p>
+        <div class="stat-box">
+            <h2>24/7</h2>
+            <p>Global Coverage</p>
         </div>
     </div>
 
     <section class="section">
         <div class="section-header">
-            <h2>UPCOMING MATCHES</h2>
-            <a href="#" class="btn-live">VIEW ALL SCHEDULE</a>
+            <h2>Schedules</h2>
+            <a href="#" class="btn-cta">Full Calendar</a>
         </div>
 
         <div class="match-grid">
+            <!-- Card 1 -->
             <div class="match-card">
-                <span class="match-time">TODAY | 20:00</span>
-                <div class="teams">
-                    <span>TEAM ALPHA</span>
-                    <span class="vs">VS</span>
-                    <span>OMEGA SQUAD</span>
+                <span class="time-label">LIVE NOW</span>
+                <div class="team-row">
+                    <span class="team-name">NORTH</span>
+                    <span class="vs-text">VS</span>
+                    <span class="team-name">TITAN</span>
                 </div>
-                <p class="tournament-name">Pro League - Grand Finals</p>
+                <div class="league-tag">CHAMPIONS LEAGUE - ROUND 5</div>
             </div>
 
+            <!-- Card 2 -->
             <div class="match-card">
-                <span class="match-time">TOMORROW | 18:30</span>
-                <div class="teams">
-                    <span>CYBER KINGS</span>
-                    <span class="vs">VS</span>
-                    <span>DRAGON ELITE</span>
+                <span class="time-label">STARTS IN 2H</span>
+                <div class="team-row">
+                    <span class="team-name">APEX</span>
+                    <span class="vs-text">VS</span>
+                    <span class="team-name">STORM</span>
                 </div>
-                <p class="tournament-name">Regional Qualifier</p>
+                <div class="league-tag">REGIONAL QUALIFIERS</div>
             </div>
 
+            <!-- Card 3 -->
             <div class="match-card">
-                <span class="match-time">15 MAY | 21:00</span>
-                <div class="teams">
-                    <span>PHANTOM 7</span>
-                    <span class="vs">VS</span>
-                    <span>TITAN ESPORTS</span>
+                <span class="time-label">TOMORROW</span>
+                <div class="team-row">
+                    <span class="team-name">GHOST</span>
+                    <span class="vs-text">VS</span>
+                    <span class="team-name">BLADE</span>
                 </div>
-                <p class="tournament-name">Challenger Series</p>
+                <div class="league-tag">ELITE INVITATIONAL</div>
             </div>
         </div>
     </section>
